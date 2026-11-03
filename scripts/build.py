@@ -117,15 +117,23 @@ def header_block(cfg, base):
     art = []
     if cfg.get('side_art'):
         art = open(os.path.join(base, cfg['side_art']), encoding='utf-8').read().rstrip('\n').split('\n')
+    layout = cfg.get('side_art_layout', 'side')
+    if layout not in ('side', 'stacked'):
+        die(f'side_art_layout must be "side" or "stacked", not "{layout}"')
     gap = cfg.get('side_art_gap', 4)
     col = 1 + max(map(len, name)) + gap          # every side-art line starts at this column
     lines = []
-    n = max(len(name), len(art))
-    top_n, top_a = (n - len(name)) // 2, (n - len(art)) // 2
-    for i in range(n):
-        a = name[i - top_n] if 0 <= i - top_n < len(name) else ''
-        s = art[i - top_a] if 0 <= i - top_a < len(art) else ''
-        lines.append(((' ' + a).ljust(col) + s).rstrip() if s else (' ' + a).rstrip())
+    if layout == 'stacked' and art:              # art on top, centered over the window
+        pad = ' ' * max(1, (W + 2 - max(map(len, art))) // 2)
+        lines = [(pad + s).rstrip() for s in art] + [''] + [(' ' + a).rstrip() for a in name]
+        col = len(pad)
+    else:
+        n = max(len(name), len(art))
+        top_n, top_a = (n - len(name)) // 2, (n - len(art)) // 2
+        for i in range(n):
+            a = name[i - top_n] if 0 <= i - top_n < len(name) else ''
+            s = art[i - top_a] if 0 <= i - top_a < len(art) else ''
+            lines.append(((' ' + a).ljust(col) + s).rstrip() if s else (' ' + a).rstrip())
     ascii_w = max(len(' ' + l) for l in name)
     if ascii_w > W:
         die(f'figlet name is {ascii_w} columns wide (> width {W}); try a smaller figlet_font')

@@ -1,17 +1,17 @@
 {
-  "name": "Celio",
+  "name": "Lorem",
   "figlet_font": "roman",
   "side_art": "side-art.txt",
   "width": 79,
   "window": {
     "title": "~/about.txt",
     "paragraphs": [
-      ["Software engineering intern and Unicamp student, from Brazil.",
-       "I build a lot of cool stuff, a lot of weird stuff, and make",
-       "videos about it."],
-      ["Weird projects, AI, tech, and trying to find the meaning of life."]
+      ["Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do",
+       "eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+       "Ut enim ad minim veniam, quis nostrud exercitation."],
+      ["Duis aute irure dolor in reprehenderit in voluptate velit esse."]
     ],
-    "signature": "-@devcelio"
+    "signature": "-@username"
   },
   "sections": { "stack": "Stack", "social": "Social media" },
   "stack": [
@@ -23,16 +23,16 @@
     { "id": "react", "label": "React" }
   ],
   "socials": [
-    { "id": "website", "label": "Website", "url": "https://devcelio.page/" },
-    { "id": "instagram", "label": "Instagram", "url": "https://www.instagram.com/devcelio/" },
-    { "id": "tiktok", "label": "TikTok", "url": "https://www.tiktok.com/@devcelio" },
-    { "id": "youtube", "label": "YouTube", "url": "https://www.youtube.com/@devcelio" },
-    { "id": "x", "label": "X", "url": "https://x.com/devcelio" },
-    { "id": "linkedin", "label": "LinkedIn", "url": "https://www.linkedin.com/in/devcelio/" }
+    { "id": "website", "label": "Website", "url": "https://example.com/" },
+    { "id": "instagram", "label": "Instagram", "url": "https://www.instagram.com/username/" },
+    { "id": "tiktok", "label": "TikTok", "url": "https://www.tiktok.com/@username" },
+    { "id": "youtube", "label": "YouTube", "url": "https://www.youtube.com/@username" },
+    { "id": "x", "label": "X", "url": "https://x.com/username" },
+    { "id": "linkedin", "label": "LinkedIn", "url": "https://www.linkedin.com/in/username/" }
   ],
   "email": "you@example.com",
   "footer": {
-    "prompt": "celio@devcelio ~ %",
+    "prompt": "user@username ~ %",
     "command": "exit",
     "lines": ["logout", "Saving session...completed.", "", "[Process completed]"]
   }

@@ -1,92 +1,63 @@
 # retro-profile-readme
 
 An [Agent Skill](https://agentskills.io/specification) that builds a retro GitHub profile
-README: a big ASCII name, optional side art, your bio inside a little Mac window, pixel-art
-headings and icon tiles for your stack and socials, and a terminal that logs out at the end.
+README: a big ASCII name, optional side art, your bio in a little Mac window, pixel-art
+headings and icons for your stack and socials, and a terminal that logs out at the end.
 
-![Preview of a profile README built with this skill](assets/preview.png)
-
-It works with Claude (Claude Code and Claude.ai), Cursor, Codex and anything else that reads
-the `SKILL.md` format. Ask your agent something like *"make me a retro GitHub profile README"*
-and it will collect your details, write a config and run the scripts.
+<table>
+  <tr>
+    <th>Light theme</th>
+    <th>Dark theme</th>
+  </tr>
+  <tr>
+    <td><img src="assets/preview-light.png" alt="Example profile README in GitHub's light theme"></td>
+    <td><img src="assets/preview-dark.png" alt="The same README in GitHub's dark theme"></td>
+  </tr>
+</table>
 
 ## Install
 
-Replace `devcelio` with the GitHub account that hosts this repo. The folder has to be named
-`retro-profile-readme`.
+Clone it into your agent's skills folder. The folder has to be called `retro-profile-readme`.
 
-**Claude Code**
+| Agent | Where |
+| --- | --- |
+| Claude Code | `~/.claude/skills/` (or `.claude/skills/` in a project) |
+| Cursor | `~/.cursor/skills/` (or `.cursor/skills/` / `.agents/skills/` in a project) |
+| Codex | `~/.agents/skills/` (or `.agents/skills/` in a repo), then call `$retro-profile-readme` |
+| Claude.ai | Zip this folder, then Customize > Skills > + > Upload a skill (code execution on) |
 
 ```bash
 git clone https://github.com/devcelio/retro-profile-readme ~/.claude/skills/retro-profile-readme
 ```
 
-Use `.claude/skills/` inside a project instead if you only want it there.
+## Use
 
-**Claude.ai**
+Ask your agent something like *"make me a retro GitHub profile README"* and it handles the
+rest. To do it by hand:
 
-Download the repo as a ZIP (or zip the `retro-profile-readme` folder yourself), then go to
-Customize > Skills > + > Create skill > Upload a skill. Code execution has to be on.
+1. `pip install pyfiglet`
+2. Copy [`examples/profile.json`](examples/profile.json) and fill in your name, bio, stack
+   and links. Every key is in [references/config.md](references/config.md).
+3. `python3 scripts/build.py my-profile.json --out ../<username>`
+4. Commit `README.md` and `imgs/` to the repo named after your username.
 
-**Cursor**
-
-```bash
-git clone https://github.com/devcelio/retro-profile-readme ~/.cursor/skills/retro-profile-readme
-```
-
-Project-level `.cursor/skills/` or `.agents/skills/` work too.
-
-**Codex**
-
-```bash
-git clone https://github.com/devcelio/retro-profile-readme ~/.agents/skills/retro-profile-readme
-```
-
-Or put it in `.agents/skills/` in your repo. Call it with `$retro-profile-readme` or pick it from `/skills`.
-
-## Run it yourself
-
-```bash
-pip install pyfiglet
-cp examples/profile.json my-profile.json        # edit it
-python3 scripts/build.py my-profile.json --out ../<username>
-
-# optional: light and dark screenshots plus a few layout checks
-pip install playwright && playwright install chromium
-python3 scripts/preview.py ../<username>
-```
-
-Commit `README.md` and `imgs/` to the repo named after your username. Every config key is
-documented in [references/config.md](references/config.md).
+Want to check it first? `pip install playwright && playwright install chromium`, then
+`python3 scripts/preview.py ../<username>` saves light and dark screenshots.
 
 ## Side art
 
-The picture next to your name is up to you. Good places to find one:
+The picture next to your name is optional. There's a small gallery of ready-to-use braille
+pieces in [`examples/art/`](examples/art/) (Pokémon and anime), or grab one from:
 
 - https://emojicombos.com/anime-ascii-art
 - https://emojicombos.com/pokemon-ascii-art
 
-Paste the one you like into a text file (say `side-art.txt`) and point `side_art` at it.
-Short pieces, around 7 to 12 lines and under 30 columns, fit best. Braille art is fine; the
-script lines it up so it can't break the name.
-
-This repo doesn't ship anyone else's art. The little computer in `examples/side-art.txt` was
-drawn for this project. Art from those sites belongs to whoever made it, so credit the artist
-or check their terms when you use it, and remember that characters like Pokémon are someone
-else's trademark.
-
-## What's inside
-
-```
-SKILL.md                 instructions the agent follows
-scripts/build.py         config -> README.md + SVGs
-scripts/preview.py       light/dark screenshots and checks
-scripts/glyphs.json      pixel icons and the 5x7 heading font
-references/config.md     every config key, custom icons
-examples/                sample config and side art
-assets/preview.png       the image above
-```
+Save it as a `.txt` file and point `side_art` at it. Around 7 to 20 lines and under ~33
+columns fits beside the name; wider pieces work with `"side_art_layout": "stacked"`.
+That art is made by other people and the characters belong to their owners, so credit the
+artist when there is one.
 
 ## License
 
-MIT, see [LICENSE](LICENSE).
+MIT, see [LICENSE](LICENSE). The art in `examples/art/` isn't covered by it, see
+[its README](examples/art/README.md).

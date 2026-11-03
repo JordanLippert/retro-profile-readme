@@ -6,8 +6,9 @@ JSON file. Paths inside it are relative to the config file. Only `name` is requi
 | --- | --- | --- |
 | `name` | (required) | Text for the big figlet header. |
 | `figlet_font` | `roman` | Any pyfiglet font. `roman` looks editorial; `standard`, `small`, `slant` are narrower. Run `pyfiglet -l` to list them. |
-| `side_art` | none | Text file with ASCII or braille art shown to the right of the name. User-supplied. |
+| `side_art` | none | Text file with ASCII or braille art shown next to the name. User-supplied or from `examples/art/`. |
 | `side_art_gap` | `4` | Spaces between the widest name line and the art. |
+| `side_art_layout` | `side` | `side` puts the art to the right of the name; `stacked` centers it above the name, for wider pieces. |
 | `width` | `79` | Width of the window box in characters. Keep the whole header under ~80 so it doesn't scroll. |
 | `window.title` | `~/about.txt` | Centered in the title bar, next to `(x) (-) (+)`. |
 | `window.paragraphs` | `[]` | List of paragraphs; each is a list of lines (max `width - 4` chars). A blank line goes between them. |

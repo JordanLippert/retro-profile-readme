@@ -28,18 +28,22 @@ Ask for anything you can't find in the conversation or the user's repo. Don't in
 
 ## 2. Side art (optional)
 
-Ask whether they want a picture next to their name. Point them to
+Ask whether they want a picture next to their name. Show them the gallery in
+[examples/art/](examples/art/README.md) (Pokémon and anime, with sizes) and also point them to
 https://emojicombos.com/anime-ascii-art and https://emojicombos.com/pokemon-ascii-art
-(or any similar collection, or their own drawing) and ask them to pick one and paste it to you.
-Save it as a plain text file next to the config (e.g. `side-art.txt`) and set `side_art`.
+(or any similar collection, or their own drawing). Let them choose; don't pick for them.
+Set `side_art` to the gallery file, or save what they paste as a text file next to the
+config (e.g. `side-art.txt`).
 
-- Never bundle or commit art you picked yourself from those sites. The user chooses it,
-  and art there is made by other people, so mention they should credit or check the
-  artist's terms if the piece names any.
-- Keep it about as tall as the name (7 to 12 lines) and under ~30 columns wide.
+- Art from those sites is made by other people and the characters belong to their owners,
+  so mention they should credit the artist if the piece names one.
+- Beside the name, keep it about 7 to 20 lines tall and under ~33 columns wide. For wider
+  pieces (up to ~62 columns) set `"side_art_layout": "stacked"` so the art sits above the name.
 - Braille art (⣿) renders a little wider than ASCII in GitHub's font. The script pads
   every name line to the same column before the art, so braille can only shift as a block,
   never break the name. Don't "fix" alignment by adding spaces inside the art.
+- Light strokes on a blank background read best in both themes. If a pasted piece is mostly
+  filled (lots of ⣿), invert it: XOR each braille cell's offset from U+2800 with 0xFF.
 
 ## 3. Write the config and build
 
