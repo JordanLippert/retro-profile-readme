@@ -1,0 +1,39 @@
+{
+  "name": "Celio",
+  "figlet_font": "roman",
+  "side_art": "side-art.txt",
+  "width": 79,
+  "window": {
+    "title": "~/about.txt",
+    "paragraphs": [
+      ["Software engineering intern and Unicamp student, from Brazil.",
+       "I build a lot of cool stuff, a lot of weird stuff, and make",
+       "videos about it."],
+      ["Weird projects, AI, tech, and trying to find the meaning of life."]
+    ],
+    "signature": "-@devcelio"
+  },
+  "sections": { "stack": "Stack", "social": "Social media" },
+  "stack": [
+    { "id": "c", "label": "C" },
+    { "id": "clojure", "label": "Clojure" },
+    { "id": "python", "label": "Python" },
+    { "id": "swift", "label": "Swift" },
+    { "id": "typescript", "label": "TypeScript" },
+    { "id": "react", "label": "React" }
+  ],
+  "socials": [
+    { "id": "website", "label": "Website", "url": "https://devcelio.page/" },
+    { "id": "instagram", "label": "Instagram", "url": "https://www.instagram.com/devcelio/" },
+    { "id": "tiktok", "label": "TikTok", "url": "https://www.tiktok.com/@devcelio" },
+    { "id": "youtube", "label": "YouTube", "url": "https://www.youtube.com/@devcelio" },
+    { "id": "x", "label": "X", "url": "https://x.com/devcelio" },
+    { "id": "linkedin", "label": "LinkedIn", "url": "https://www.linkedin.com/in/devcelio/" }
+  ],
+  "email": "you@example.com",
+  "footer": {
+    "prompt": "celio@devcelio ~ %",
+    "command": "exit",
+    "lines": ["logout", "Saving session...completed.", "", "[Process completed]"]
+  }
+}
