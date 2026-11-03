@@ -1,8 +1,8 @@
 # retro-profile-readme
 
-An [Agent Skill](https://agentskills.io/specification) that builds a retro GitHub profile
-README: a big ASCII name, optional side art, your bio in a little Mac window, pixel-art
-headings and icons for your stack and socials, and a terminal that logs out at the end.
+An [Agent Skill](https://agentskills.io/specification) that turns your GitHub profile into
+a retro page: big ASCII name, optional art, a little Mac window with your bio, pixel icons
+and a terminal sign-off.
 
 <table>
   <tr>
@@ -17,47 +17,33 @@ headings and icons for your stack and socials, and a terminal that logs out at t
 
 ## Install
 
-Clone it into your agent's skills folder. The folder has to be called `retro-profile-readme`.
-
-| Agent | Where |
-| --- | --- |
-| Claude Code | `~/.claude/skills/` (or `.claude/skills/` in a project) |
-| Cursor | `~/.cursor/skills/` (or `.cursor/skills/` / `.agents/skills/` in a project) |
-| Codex | `~/.agents/skills/` (or `.agents/skills/` in a repo), then call `$retro-profile-readme` |
-| Claude.ai | Zip this folder, then Customize > Skills > + > Upload a skill (code execution on) |
+Clone it into your agent's skills folder (the folder must be named `retro-profile-readme`):
 
 ```bash
 git clone https://github.com/devcelio/retro-profile-readme ~/.claude/skills/retro-profile-readme
 ```
 
-## Use
+- **Claude Code:** `~/.claude/skills/` as above
+- **Cursor:** `~/.cursor/skills/`
+- **Codex:** `~/.agents/skills/`
+- **Claude.ai:** zip the folder, then Customize > Skills > Upload a skill
 
-Ask your agent something like *"make me a retro GitHub profile README"* and it handles the
-rest. To do it by hand:
+## Usage
 
-1. `pip install pyfiglet`
-2. Copy [`examples/profile.json`](examples/profile.json) and fill in your name, bio, stack
-   and links. Every key is in [references/config.md](references/config.md).
-3. `python3 scripts/build.py my-profile.json --out ../<username>`
-4. Commit `README.md` and `imgs/` to the repo named after your username.
+Just ask your agent: *"make my GitHub profile README retro"*. It will ask you what it needs
+(your name, art, bio, stack, links), with options to pick from, and show you a light and
+dark preview before publishing anything. Say "you pick" whenever you don't care.
 
-Want to check it first? `pip install playwright && playwright install chromium`, then
-`python3 scripts/preview.py ../<username>` saves light and dark screenshots.
+For art, there's a small gallery of Pokémon and anime pieces in
+[`examples/art/`](examples/art/), or you can bring your own from
+[emojicombos anime](https://emojicombos.com/anime-ascii-art) and
+[emojicombos Pokémon](https://emojicombos.com/pokemon-ascii-art).
 
-## Side art
-
-The picture next to your name is optional. There's a small gallery of ready-to-use braille
-pieces in [`examples/art/`](examples/art/) (Pokémon and anime), or grab one from:
-
-- https://emojicombos.com/anime-ascii-art
-- https://emojicombos.com/pokemon-ascii-art
-
-Save it as a `.txt` file and point `side_art` at it. Around 7 to 20 lines and under ~33
-columns fits beside the name; wider pieces work with `"side_art_layout": "stacked"`.
-That art is made by other people and the characters belong to their owners, so credit the
-artist when there is one.
+Prefer doing it by hand? Copy [`examples/profile.json`](examples/profile.json), see
+[references/config.md](references/config.md) for every option, and run
+`python3 scripts/build.py profile.json --out ../<username>`.
 
 ## License
 
-MIT, see [LICENSE](LICENSE). The art in `examples/art/` isn't covered by it, see
-[its README](examples/art/README.md).
+MIT, see [LICENSE](LICENSE). The pieces in `examples/art/` belong to their artists and
+aren't covered by it; see [their README](examples/art/README.md).
