@@ -1,5 +1,19 @@
 # retro-profile-readme
 
+> Fork of [devcelio/retro-profile-readme](https://github.com/devcelio/retro-profile-readme), the
+> generator created by Celio Junior. It powers [my GitHub profile](https://github.com/JordanLippert).
+>
+> **What this fork adds:**
+>
+> - `art_as_image`: draws braille art as SVG, so GitHub's code block spacing can't pull the dots apart
+> - `theme_aware`: transparent images with light and dark versions, with no paper cards
+> - 35 pixel icons on a 24x24 grid, in brand colors, for common stacks
+> - A projects section, closing art and stack rows
+> - `scripts/art.py`, a small editor that cuts, inverts and outlines braille art
+> - Tests through the build CLI
+>
+> Every option is in [references/config.md](references/config.md). The original README follows.
+
 An [Agent Skill](https://agentskills.io/specification) that turns your GitHub profile into
 a retro page: big ASCII name, optional art, a little Mac window with your bio, pixel icons
 and a terminal sign-off.

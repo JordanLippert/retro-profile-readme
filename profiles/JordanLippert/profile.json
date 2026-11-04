@@ -177,12 +177,30 @@
       ]
     },
     {
+      "name": "Versículos Diários",
+      "url": "https://daily-versicles.vercel.app",
+      "stack": "Next.js, TypeScript, Prisma, PostgreSQL, Web Push",
+      "lines": [
+        "PWA com dois versículos por dia, notificações push e imagens prontas para compartilhar.",
+        "PWA with two verses a day, push notifications and images ready to share."
+      ]
+    },
+    {
       "name": "DevRoast",
       "url": "https://github.com/JordanLippert/devroast",
       "stack": "Next.js, TypeScript, Drizzle, PostgreSQL, Gemini",
       "lines": [
         "Cole seu código e receba nota, feedback e sugestões geradas por IA, com leaderboard público.",
         "Paste your code and get an AI score, feedback and suggestions, with a public leaderboard."
+      ]
+    },
+    {
+      "name": "Retro Profile README",
+      "url": "https://github.com/JordanLippert/retro-profile-readme",
+      "stack": "Python, SVG",
+      "lines": [
+        "Fork do gerador do DevCelio que monta este perfil: arte como imagem, temas e ícones em pixel.",
+        "Fork of DevCelio's generator behind this profile: art as images, themes and pixel icons."
       ]
     }
   ],
