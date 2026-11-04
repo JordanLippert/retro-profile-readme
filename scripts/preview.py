@@ -50,7 +50,7 @@ def main():
         for theme in ('light', 'dark'):
             f = root / f'.preview-{theme}.html'
             f.write_text(page(md, theme), encoding='utf-8')
-            pg = b.new_page(viewport={'width': 960, 'height': 600}, device_scale_factor=1.5)
+            pg = b.new_page(viewport={'width': 960, 'height': 600}, device_scale_factor=1.5, color_scheme=theme)
             pg.goto(f.as_uri()); pg.wait_for_load_state('networkidle')
             out = root / f'preview-{theme}.png'
             pg.screenshot(path=str(out), full_page=True)

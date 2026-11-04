@@ -12,6 +12,9 @@ import argparse, html, json, os, sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 GLY = json.load(open(os.path.join(HERE, 'glyphs.json')))
 ICONS, FONT = GLY['icons'], GLY['font_5x7']
+ICONS24 = json.load(open(os.path.join(HERE, 'icons24.json'), encoding='utf-8'))
+THEMES = {'light': {'ink': '#1f2328', 'accent': '#1846b8', 'highlight': '#f2c230'},
+          'dark': {'ink': '#e6edf3', 'accent': '#79a6ff', 'highlight': '#f2c230'}}
 
 DEFAULT_PALETTE = {  # light "paper" look that also reads on GitHub dark mode
     'paper': '#fbfaf6', 'ink': '#1d1c1a', 'accent': '#1846b8',
@@ -207,34 +210,102 @@ def art_card(P, w, h, body, title):
             f'shape-rendering="crispEdges"><title>{html.escape(title)}</title>{shapes}{body}</svg>\n')
 
 
-def closing_svg(P, rows, title):
-    pitch, pad = 3, 24
+def bare_svg(w, h, body, title):
+    """Transparent image for theme_aware pages: no card, so it sits on the page itself."""
+    return (f'<svg xmlns="http://www.w3.org/2000/svg" width="{w}" height="{h}" viewBox="0 0 {w} {h}" '
+            f'shape-rendering="crispEdges"><title>{html.escape(title)}</title>{body}</svg>\n')
+
+
+def run_rects(rows, ox, oy, scale, colors):
+    """Rectangles for glyph rows, one per horizontal run of the same character."""
+    out = []
+    for y, row in enumerate(rows):
+        x = 0
+        while x < len(row):
+            c, start = row[x], x
+            while x < len(row) and row[x] == c:
+                x += 1
+            if c in colors:
+                out.append(f'<rect x="{ox + start * scale}" y="{oy + y * scale}" width="{(x - start) * scale}" '
+                           f'height="{scale}" fill="{colors[c]}"/>')
+    return ''.join(out)
+
+
+def icon_themed(item, theme):
+    T, size, scale = THEMES[theme], 30, 2
+    if item['id'] in ICONS24:
+        icon = ICONS24[item['id']]
+        rows, colors = icon['rows'], {'#': '#' + icon[theme]}
+    else:
+        rows, colors = glyph_for(item), {'#': T['ink'], '*': T['accent'], 'o': T['highlight']}
+    ox = (size - len(rows[0])) // 2 * scale
+    oy = (size - len(rows)) // 2 * scale
+    return bare_svg(size * scale, size * scale, run_rects(rows, ox, oy, scale, colors), item['label']), size * scale
+
+
+def heading_themed(num, word, theme):
+    T, scale = THEMES[theme], SCALE
+    word = word.upper()
+    bad = sorted({c for c in num + word if c not in FONT})
+    if bad:
+        die(f'heading "{word}" uses characters the pixel font lacks: {bad}')
+    nw, ww = text_w(num), text_w(word)
+    x = nw + 4 if num else 0
+    rects = (text_px(num, 0, 0, T['accent']) if num else []) + text_px(word, x, 0, T['ink'])
+    body = ''.join(f'<rect x="{px * scale}" y="{py * scale}" width="{scale}" height="{scale}" fill="{c}"/>'
+                   for px, py, _, _, c in rects)
+    body += f'<rect x="{x * scale}" y="{8 * scale}" width="{ww * scale}" height="{scale}" fill="{T["highlight"]}"/>'
+    return bare_svg((x + ww) * scale, 9 * scale, body, word.title()), (x + ww) * scale
+
+
+def themed_image(out, base, render, alt, title=None):
+    """Write a light and a dark image and the tag that lets GitHub pick by the viewer's theme."""
+    width = 0
+    for theme in THEMES:
+        svg_text, width = render(theme)
+        open(f'{out}/{base}-{theme}.svg', 'w', encoding='utf-8').write(svg_text)
+    extra = f' title="{html.escape(title)}"' if title else ''
+    return (f'<picture><source media="(prefers-color-scheme: dark)" srcset="./{base}-dark.svg">'
+            f'<img src="./{base}-light.svg" alt="{html.escape(alt)}"{extra} width="{width}"></picture>')
+
+
+def closing_svg(P, rows, title, theme=None):
+    pitch, pad = 3, 0 if theme else 24
     w = len(rows[0]) * 2 * pitch + 2 * pad
     h = len(rows) * 4 * pitch + 2 * pad
-    return art_card(P, w, h, f'<path fill="{P["ink"]}" d="{dots_path(rows, pad, pad, pitch)}"/>', title), w
+    ink = THEMES[theme]['ink'] if theme else P['ink']
+    body = f'<path fill="{ink}" d="{dots_path(rows, pad, pad, pitch)}"/>'
+    return (bare_svg(w, h, body, title) if theme else art_card(P, w, h, body, title)), w
 
 
-def banner_svg(P, name, rows, title):
+def banner_svg(P, name, rows, title, theme=None):
     """The name in the pixel font of the headings, with the art beside it."""
     word = name.upper()
     bad = sorted({c for c in word if c not in FONT})
     if bad:
         die(f'name "{word}" uses characters the pixel font lacks: {bad}')
-    scale, pitch, pad, gap = 10, 4, 32, 48
+    scale, pitch, gap = 10, 4, 48
+    pad = 0 if theme else 32
+    ink = THEMES[theme]['ink'] if theme else P['ink']
     text_width, text_height = text_w(word) * scale, 7 * scale
     art_w = len(rows[0]) * 2 * pitch if rows else 0
     art_h = len(rows) * 4 * pitch if rows else 0
     w = pad + text_width + (gap + art_w if rows else 0) + pad
     h = max(art_h, text_height + scale * 4) + 2 * pad
     x, y = pad, (h - text_height) // 2
-    band = (f'<rect x="{x - scale}" y="{y + 4 * scale}" width="{text_width + 2 * scale}" '
-            f'height="{4 * scale}" fill="{P["highlight"]}"/>')
+    if theme:  # letters over a yellow band would lose contrast on the dark theme
+        band = (f'<rect x="{x}" y="{y + text_height + scale}" width="{text_width}" '
+                f'height="{scale}" fill="{P["highlight"]}"/>')
+    else:
+        band = (f'<rect x="{x - scale}" y="{y + 4 * scale}" width="{text_width + 2 * scale}" '
+                f'height="{4 * scale}" fill="{P["highlight"]}"/>')
     letters = ''.join(f'<rect x="{x + px * scale}" y="{y + py * scale}" width="{scale}" height="{scale}" fill="{c}"/>'
-                      for px, py, _, _, c in text_px(word, 0, 0, P['ink']))
+                      for px, py, _, _, c in text_px(word, 0, 0, ink))
     art = ''
     if rows:
-        art = f'<path fill="{P["ink"]}" d="{dots_path(rows, w - pad - art_w, (h - art_h) // 2, pitch)}"/>'
-    return art_card(P, w, h, band + letters + art, title), w
+        art = f'<path fill="{ink}" d="{dots_path(rows, w - pad - art_w, (h - art_h) // 2, pitch)}"/>'
+    body = band + letters + art
+    return (bare_svg(w, h, body, title) if theme else art_card(P, w, h, body, title)), w
 
 
 def image_tag(path, alt, width, center=False):
@@ -278,13 +349,18 @@ def build(cfg_path, out):
     os.makedirs(f'{out}/imgs/headings', exist_ok=True)
 
     as_image = cfg.get('art_as_image', False)
+    themed = cfg.get('theme_aware', False)
     if as_image:
         os.makedirs(f'{out}/imgs/art', exist_ok=True)
         alt = cfg.get('header_alt', cfg['name'])
         rows = read_art(base, cfg['side_art']) if cfg.get('side_art') else []
-        banner, width = banner_svg(P, cfg['name'], rows, alt)
-        open(f'{out}/imgs/art/header.svg', 'w', encoding='utf-8').write(banner)
-        parts = [image_tag('imgs/art/header.svg', alt, width), '```text\n' + window_block(cfg) + '\n```']
+        if themed:
+            top = '<p>' + themed_image(out, 'imgs/art/header', lambda t: banner_svg(P, cfg['name'], rows, alt, t), alt) + '</p>'
+        else:
+            banner, width = banner_svg(P, cfg['name'], rows, alt)
+            open(f'{out}/imgs/art/header.svg', 'w', encoding='utf-8').write(banner)
+            top = image_tag('imgs/art/header.svg', alt, width)
+        parts = [top, '```text\n' + window_block(cfg) + '\n```']
     else:
         parts = ['```text\n' + header_block(cfg, base) + '\n```']
     sections = cfg.get('sections', {})
@@ -294,9 +370,12 @@ def build(cfg_path, out):
         num += 1
         n = f'{num:02d}' if cfg.get('numbered_headings', True) else ''
         word = sections.get(key, default)
+        alt = (n + ' ' if n else '') + word.capitalize()
+        if themed:
+            parts.append('<p>' + themed_image(out, f'imgs/headings/{key}', lambda t: heading_themed(n, word, t), alt) + '</p>')
+            return
         s, w, h = heading_svg(P, n, word)
         open(f'{out}/imgs/headings/{key}.svg', 'w').write(s)
-        alt = (n + ' ' if n else '') + word.capitalize()
         parts.append(f'<p><img src="./imgs/headings/{key}.svg" alt="{html.escape(alt)}" width="{w}" height="{h}"></p>')
 
     def section(key, default, items, linked):
@@ -307,10 +386,14 @@ def build(cfg_path, out):
             tags = []
             for it in row:
                 it.setdefault('label', it['id'].title())
-                fname = f'{"lang-" if not linked else ""}{it["id"]}.svg'
-                open(f'{out}/imgs/icons/{fname}', 'w').write(icon_svg(P, it))
-                alt, title = html.escape(it.get('alt', it['label'])), html.escape(it.get('title', it['label']))
-                img = f'<img src="./imgs/icons/{fname}" alt="{alt}" title="{title}" width="60" height="60">'
+                stem = f'{"lang-" if not linked else ""}{it["id"]}'
+                if themed:
+                    img = themed_image(out, f'imgs/icons/{stem}', lambda t, it=it: icon_themed(it, t),
+                                       it.get('alt', it['label']), it.get('title', it['label']))
+                else:
+                    open(f'{out}/imgs/icons/{stem}.svg', 'w').write(icon_svg(P, it))
+                    alt, title = html.escape(it.get('alt', it['label'])), html.escape(it.get('title', it['label']))
+                    img = f'<img src="./imgs/icons/{stem}.svg" alt="{alt}" title="{title}" width="60" height="60">'
                 tags.append(f'<a href="{html.escape(it["url"])}">{img}</a>' if linked else img)
             parts.append(chain(tags))
 
@@ -325,9 +408,14 @@ def build(cfg_path, out):
     section('social', 'Social media', socials, True)
     if as_image and cfg.get('closing_art'):
         alt = cfg.get('closing_art_alt', 'Closing art')
-        closing, width = closing_svg(P, read_art(base, cfg['closing_art']), alt)
-        open(f'{out}/imgs/art/closing.svg', 'w', encoding='utf-8').write(closing)
-        parts.append(image_tag('imgs/art/closing.svg', alt, width, center=True))
+        rows = read_art(base, cfg['closing_art'])
+        if themed:
+            parts.append('<p align="center">' + themed_image(out, 'imgs/art/closing',
+                                                             lambda t: closing_svg(P, rows, alt, t), alt) + '</p>')
+        else:
+            closing, width = closing_svg(P, rows, alt)
+            open(f'{out}/imgs/art/closing.svg', 'w', encoding='utf-8').write(closing)
+            parts.append(image_tag('imgs/art/closing.svg', alt, width, center=True))
     elif cfg.get('closing_art'):
         parts.append('```text\n' + closing_art_block(cfg, base) + '\n```')
     foot = footer_block(cfg)

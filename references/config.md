@@ -20,6 +20,7 @@ JSON file. Paths inside it are relative to the config file. Only `name` is requi
 | `closing_art` | none | Text file with art shown centered right before the footer. |
 | `art_as_image` | `false` | Draws `side_art` and `closing_art` as SVG images on a paper card, so the line height of code blocks cannot pull the dots apart. The name uses the pixel font; the bio stays text. |
 | `header_alt` / `closing_art_alt` | name / `Closing art` | Alt text for those images. |
+| `theme_aware` | `false` | Replaces paper cards with transparent images in a light and a dark version, picked by the viewer's GitHub theme. Icons use the 24x24 brand-color set; other ids fall back to letters. |
 | `socials` | `[]` | Items `{ "id", "label", "url" }`, optional `alt` and `title`. |
 | `email` | none | Adds an envelope icon linking to `mailto:`. Never shown as text. |
 | `palette` | see below | Any subset of the colors below. |
@@ -45,6 +46,9 @@ Stack ids: `csharp`, `dotnet`, `javascript`, `java`, `nodejs`, `nestjs`, `fastap
 `drizzle`, `docker`, `nginx`, `aws`, `cloudflare`, `vercel`, `render`, `git`, `githubactions`,
 `bitbucket`, `stripe`. Reduced from Simple Icons (CC0) and Devicon (MIT) or drawn by hand; the logos
 belong to their owners.
+
+`scripts/icons24.json` holds the 24x24 set used by `theme_aware`, with one color per theme. It comes from
+Pixelarticons (MIT, github.com/halfmage/pixelarticons), Simple Icons (CC0) and Devicon (MIT).
 
 Any other id gets the first two letters of `label` (or of `short`, if set) in the pixel font.
 To draw your own, add a `glyph` to the item: a list of equal-length strings, at most 14×14, where

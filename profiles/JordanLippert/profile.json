@@ -213,5 +213,6 @@
   "closing_art": "art/sanji.txt",
   "art_as_image": true,
   "header_alt": "Jordan, with Luffy from One Piece",
-  "closing_art_alt": "Sanji from One Piece in a dark suit, smoking"
+  "closing_art_alt": "Sanji from One Piece in a dark suit, smoking",
+  "theme_aware": true
 }
