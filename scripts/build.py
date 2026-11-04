@@ -174,6 +174,14 @@ def chain(tags):
     return '<p>\n  ' + '\n  >'.join(t[:-1] for t in tags) + '>\n</p>'
 
 
+def project_item(p):
+    """One list item: linked name, stack, then the description lines."""
+    head = f'<b><a href="{html.escape(p["url"])}">{html.escape(p["name"])}</a></b>'
+    if p.get('stack'):
+        head += f' · {html.escape(p["stack"])}'
+    return '  <li>' + '<br>'.join([head] + [html.escape(l) for l in p.get('lines', [])]) + '</li>'
+
+
 def build(cfg_path, out):
     base = os.path.dirname(os.path.abspath(cfg_path))
     cfg = json.load(open(cfg_path, encoding='utf-8'))
@@ -187,10 +195,8 @@ def build(cfg_path, out):
     parts = ['```text\n' + header_block(cfg, base) + '\n```']
     sections = cfg.get('sections', {})
     num = 0
-    def section(key, default, items, linked):
+    def heading(key, default):
         nonlocal num
-        if not items:
-            return
         num += 1
         n = f'{num:02d}' if cfg.get('numbered_headings', True) else ''
         word = sections.get(key, default)
@@ -198,21 +204,35 @@ def build(cfg_path, out):
         open(f'{out}/imgs/headings/{key}.svg', 'w').write(s)
         alt = (n + ' ' if n else '') + word.capitalize()
         parts.append(f'<p><img src="./imgs/headings/{key}.svg" alt="{html.escape(alt)}" width="{w}" height="{h}"></p>')
-        tags = []
-        for it in items:
-            it.setdefault('label', it['id'].title())
-            fname = f'{"lang-" if not linked else ""}{it["id"]}.svg'
-            open(f'{out}/imgs/icons/{fname}', 'w').write(icon_svg(P, it))
-            alt, title = html.escape(it.get('alt', it['label'])), html.escape(it.get('title', it['label']))
-            img = f'<img src="./imgs/icons/{fname}" alt="{alt}" title="{title}" width="60" height="60">'
-            tags.append(f'<a href="{html.escape(it["url"])}">{img}</a>' if linked else img)
-        parts.append(chain(tags))
+
+    def section(key, default, items, linked):
+        if not items:
+            return
+        heading(key, default)
+        for row in items if isinstance(items[0], list) else [items]:  # a list of lists is one row each
+            tags = []
+            for it in row:
+                it.setdefault('label', it['id'].title())
+                fname = f'{"lang-" if not linked else ""}{it["id"]}.svg'
+                open(f'{out}/imgs/icons/{fname}', 'w').write(icon_svg(P, it))
+                alt, title = html.escape(it.get('alt', it['label'])), html.escape(it.get('title', it['label']))
+                img = f'<img src="./imgs/icons/{fname}" alt="{alt}" title="{title}" width="60" height="60">'
+                tags.append(f'<a href="{html.escape(it["url"])}">{img}</a>' if linked else img)
+            parts.append(chain(tags))
 
     section('stack', 'Stack', cfg.get('stack', []), False)
+    projects = cfg.get('projects', [])
+    if projects:  # HTML, not markdown, so the preview renders it the way GitHub does
+        heading('projects', 'Projects')
+        parts.append('<ul>\n' + '\n'.join(project_item(p) for p in projects) + '\n</ul>')
     socials = list(cfg.get('socials', []))
     if cfg.get('email'):  # link only, the address never shows as text
         socials.append({'id': 'email', 'url': 'mailto:' + cfg['email'], 'label': 'Email', 'alt': 'Send me an email'})
     section('social', 'Social media', socials, True)
+    if cfg.get('closing_art'):
+        rows = open(os.path.join(base, cfg['closing_art']), encoding='utf-8').read().rstrip('\n').split('\n')
+        pad = ' ' * max(1, (cfg.get('width', 79) + 2 - max(map(len, rows))) // 2)
+        parts.append('```text\n' + '\n'.join(pad + r for r in rows) + '\n```')
     foot = footer_block(cfg)
     if foot:
         parts.append('```text\n' + foot + '\n```')

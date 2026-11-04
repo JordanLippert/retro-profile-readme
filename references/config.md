@@ -13,9 +13,11 @@ JSON file. Paths inside it are relative to the config file. Only `name` is requi
 | `window.title` | `~/about.txt` | Centered in the title bar, next to `(x) (-) (+)`. |
 | `window.paragraphs` | `[]` | List of paragraphs; each is a list of lines (max `width - 4` chars). A blank line goes between them. |
 | `window.signature` | none | Line right under the last paragraph, e.g. `-@handle`. |
-| `sections.stack` / `sections.social` | `Stack` / `Social media` | Heading words. Pixel font has A-Z, 0-9, space and `, . ! ' / - + #`. |
+| `sections.stack` / `sections.projects` / `sections.social` | `Stack` / `Projects` / `Social media` | Heading words. Pixel font has A-Z, 0-9, space and `, . ! ' / - + #`. |
 | `numbered_headings` | `true` | Prefix headings with `01`, `02`. |
-| `stack` | `[]` | Items `{ "id", "label" }`. Shown without links. |
+| `stack` | `[]` | Items `{ "id", "label" }`. Shown without links. A list of lists makes one row of icons per inner list. |
+| `projects` | `[]` | Items `{ "name", "url", "stack", "lines" }`, shown between stack and social. `lines` is a list, one line each. Leave out to skip the section. |
+| `closing_art` | none | Text file with art shown centered right before the footer. |
 | `socials` | `[]` | Items `{ "id", "label", "url" }`, optional `alt` and `title`. |
 | `email` | none | Adds an envelope icon linking to `mailto:`. Never shown as text. |
 | `palette` | see below | Any subset of the colors below. |
@@ -36,6 +38,12 @@ behind heading words and the yellow in icons like Python.
 Bundled ids: `c`, `clojure`, `python`, `swift`, `typescript`, `react`, `website`, `instagram`,
 `tiktok`, `youtube`, `x`, `linkedin`, `github`, `email`.
 
+Stack ids: `csharp`, `dotnet`, `javascript`, `java`, `nodejs`, `nestjs`, `fastapi`, `django`, `nextjs`,
+`vite`, `tailwind`, `expo`, `astro`, `shadcn`, `postgresql`, `mysql`, `sqlserver`, `firebase`, `prisma`,
+`drizzle`, `docker`, `nginx`, `aws`, `cloudflare`, `vercel`, `render`, `git`, `githubactions`,
+`bitbucket`, `stripe`. Reduced from Simple Icons (CC0) and Devicon (MIT) or drawn by hand; the logos
+belong to their owners.
+
 Any other id gets the first two letters of `label` (or of `short`, if set) in the pixel font.
 To draw your own, add a `glyph` to the item: a list of equal-length strings, at most 14×14, where
 `#` is ink, `*` is accent, `o` is highlight and `.` is empty.
@@ -50,3 +58,15 @@ To draw your own, add a `glyph` to the item: a list of equal-length strings, at 
 ```
 
 New bundled glyphs go in `scripts/glyphs.json` under `icons`.
+
+## Editing art
+
+`scripts/art.py` edits braille art on its dot grid and trims the empty edges:
+
+```bash
+python3 scripts/art.py in.txt --out out.txt --cut 19-25,31 --outline-from 14
+```
+
+- `--cut`: remove rows, counted from 0, to shorten a tall piece.
+- `--invert`: flip every dot, for mostly filled pieces.
+- `--outline-from`: hollow solid areas from that row down, counted after the cut, so a detailed face stays intact.
