@@ -1,0 +1,220 @@
+{
+  "name": "Jordan",
+  "width": 79,
+  "window": {
+    "title": "~/about.txt",
+    "paragraphs": [
+      [
+        "PT  Dev full-stack em Itajaí/SC, há mais de 2 anos com APIs REST,",
+        "    microsserviços, web e apps React Native. Hoje na KTI Technology;",
+        "    antes Yellowling Traduções e IntuitiveCare.",
+        "    Ciência da Computação na Univali, formatura prevista para 2027."
+      ],
+      [
+        "EN  Full-stack developer from Itajaí, Brazil, with 2+ years building",
+        "    REST APIs, microservices, web and React Native apps. Currently at",
+        "    KTI Technology; previously Yellowling Traduções and IntuitiveCare.",
+        "    Computer Science at Univali, graduating in 2027."
+      ]
+    ],
+    "signature": "-@JordanLippert"
+  },
+  "sections": {
+    "stack": "Stack",
+    "projects": "Projetos / Projects",
+    "social": "Contato / Contact"
+  },
+  "stack": [
+    [
+      {
+        "id": "csharp",
+        "label": "C#"
+      },
+      {
+        "id": "dotnet",
+        "label": ".NET"
+      },
+      {
+        "id": "typescript",
+        "label": "TypeScript"
+      },
+      {
+        "id": "javascript",
+        "label": "JavaScript"
+      },
+      {
+        "id": "python",
+        "label": "Python"
+      },
+      {
+        "id": "java",
+        "label": "Java"
+      },
+      {
+        "id": "nodejs",
+        "label": "Node.js"
+      },
+      {
+        "id": "nestjs",
+        "label": "NestJS"
+      },
+      {
+        "id": "fastapi",
+        "label": "FastAPI"
+      },
+      {
+        "id": "django",
+        "label": "Django"
+      }
+    ],
+    [
+      {
+        "id": "react",
+        "label": "React / React Native"
+      },
+      {
+        "id": "nextjs",
+        "label": "Next.js"
+      },
+      {
+        "id": "vite",
+        "label": "Vite"
+      },
+      {
+        "id": "tailwind",
+        "label": "Tailwind CSS"
+      },
+      {
+        "id": "astro",
+        "label": "Astro"
+      },
+      {
+        "id": "shadcn",
+        "label": "shadcn/ui"
+      },
+      {
+        "id": "expo",
+        "label": "Expo"
+      }
+    ],
+    [
+      {
+        "id": "sqlserver",
+        "label": "SQL Server"
+      },
+      {
+        "id": "postgresql",
+        "label": "PostgreSQL"
+      },
+      {
+        "id": "mysql",
+        "label": "MySQL"
+      },
+      {
+        "id": "firebase",
+        "label": "Firebase"
+      },
+      {
+        "id": "prisma",
+        "label": "Prisma"
+      },
+      {
+        "id": "drizzle",
+        "label": "Drizzle ORM"
+      }
+    ],
+    [
+      {
+        "id": "docker",
+        "label": "Docker"
+      },
+      {
+        "id": "nginx",
+        "label": "Nginx"
+      },
+      {
+        "id": "aws",
+        "label": "AWS"
+      },
+      {
+        "id": "cloudflare",
+        "label": "Cloudflare"
+      },
+      {
+        "id": "vercel",
+        "label": "Vercel"
+      },
+      {
+        "id": "render",
+        "label": "Render"
+      },
+      {
+        "id": "git",
+        "label": "Git"
+      },
+      {
+        "id": "github",
+        "label": "GitHub"
+      },
+      {
+        "id": "githubactions",
+        "label": "GitHub Actions"
+      },
+      {
+        "id": "bitbucket",
+        "label": "Bitbucket"
+      },
+      {
+        "id": "stripe",
+        "label": "Stripe"
+      }
+    ]
+  ],
+  "projects": [
+    {
+      "name": "Pracomprá",
+      "url": "https://pracompra.vercel.app",
+      "stack": "Expo, TypeScript, C#/.NET 8",
+      "lines": [
+        "Lista de compras em PWA instalável, com uso offline, seleção por voz e envio pelo WhatsApp.",
+        "Shopping list as an installable PWA, with offline use, voice selection and WhatsApp sharing."
+      ]
+    },
+    {
+      "name": "DevRoast",
+      "url": "https://github.com/JordanLippert/devroast",
+      "stack": "Next.js, TypeScript, Drizzle, PostgreSQL, Gemini",
+      "lines": [
+        "Cole seu código e receba nota, feedback e sugestões geradas por IA, com leaderboard público.",
+        "Paste your code and get an AI score, feedback and suggestions, with a public leaderboard."
+      ]
+    }
+  ],
+  "socials": [
+    {
+      "id": "linkedin",
+      "label": "LinkedIn",
+      "url": "https://www.linkedin.com/in/jordan-lippert-de-oliveira/"
+    },
+    {
+      "id": "github",
+      "label": "GitHub",
+      "url": "https://github.com/JordanLippert"
+    }
+  ],
+  "email": "lippertx11@gmail.com",
+  "footer": {
+    "prompt": "jordan@github ~ %",
+    "command": "exit",
+    "lines": [
+      "logout",
+      "Saving session...completed.",
+      "",
+      "[Process completed]"
+    ]
+  },
+  "figlet_font": "standard",
+  "side_art": "art/luffy.txt",
+  "side_art_layout": "side",
+  "closing_art": "art/sanji.txt"
+}
