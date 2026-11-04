@@ -4,10 +4,10 @@
 
 **Blocked by:** 05
 
-**Status:** ready-for-agent
+**Status:** done
 
 - [x] Only the generated README and images are committed to the profile repo
 - [x] The profile page shows the new README in light and dark themes
 - [x] All icons and heading images load on GitHub
 - [x] Header and closing art do not scroll sideways or misalign
-- [ ] Jordan reviews the live page and says whether he likes it
+- [x] Jordan reviews the live page and says whether he likes it

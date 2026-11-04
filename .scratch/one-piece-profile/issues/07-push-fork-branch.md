@@ -4,9 +4,9 @@
 
 **Blocked by:** 06, and Jordan's approval of the live profile
 
-**Status:** ready-for-human
+**Status:** done
 
-- [ ] Jordan approved the live profile
-- [ ] Any adjustment made in 06 is committed to the branch first
-- [ ] The branch is visible on the fork
-- [ ] The fork's default branch stays unchanged
+- [x] Jordan approved the live profile
+- [x] Any adjustment made in 06 is committed to the branch first
+- [x] The branch is visible on the fork
+- [x] The fork's default branch stays unchanged
