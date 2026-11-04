@@ -169,7 +169,7 @@
   "projects": [
     {
       "name": "Pracomprá",
-      "url": "https://pracompra.vercel.app",
+      "url": "https://github.com/JordanLippert/Market_List_Generator",
       "stack": "Expo, TypeScript, C#/.NET 8",
       "lines": [
         "Lista de compras em PWA instalável, com uso offline, seleção por voz e envio pelo WhatsApp.",
@@ -192,6 +192,15 @@
       "lines": [
         "Cole seu código e receba nota, feedback e sugestões geradas por IA, com leaderboard público.",
         "Paste your code and get an AI score, feedback and suggestions, with a public leaderboard."
+      ]
+    },
+    {
+      "name": "hearsay-pwa",
+      "url": "https://github.com/JordanLippert/hearsay-pwa",
+      "stack": "TypeScript, React, Whisper",
+      "lines": [
+        "Biblioteca de voz para PWAs: transcrição no navegador e comandos, sem a API nativa SpeechRecognition.",
+        "Voice library for PWAs: in-browser transcription and commands, without the native SpeechRecognition API."
       ]
     },
     {
