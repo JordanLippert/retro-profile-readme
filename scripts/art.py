@@ -15,7 +15,10 @@ DOTS = ((0, 0, 0x01), (0, 1, 0x02), (0, 2, 0x04), (1, 0, 0x08),
 
 def load(path):
     text = open(path, encoding='utf-8').read().rstrip('\n').replace(' ', chr(BLANK))
-    rows = text.split('\n')
+    return text.split('\n')
+
+
+def pad(rows):
     width = max(map(len, rows))
     return [r.ljust(width, chr(BLANK)) for r in rows]
 
@@ -84,6 +87,7 @@ if __name__ == '__main__':
         art = [r for i, r in enumerate(art) if i not in drop]
     if a.invert:
         art = invert(art)
+    art = pad(art)  # after invert, or the padding would flip into a solid edge
     if a.outline_from is not None:
         art = outline(art, a.outline_from)
     open(a.out, 'w', encoding='utf-8').write('\n'.join(trim(art)) + '\n')

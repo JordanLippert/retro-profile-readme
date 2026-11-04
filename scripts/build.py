@@ -158,6 +158,14 @@ def header_block(cfg, base):
     return '\n'.join(lines + [''] + box)
 
 
+def closing_art_block(cfg, base):
+    if not cfg.get('closing_art'):
+        return ''
+    rows = open(os.path.join(base, cfg['closing_art']), encoding='utf-8').read().rstrip('\n').split('\n')
+    pad = ' ' * max(1, (cfg.get('width', 79) + 2 - max(map(len, rows))) // 2)
+    return '\n'.join(pad + r for r in rows)
+
+
 def footer_block(cfg):
     f = cfg.get('footer')
     if not f:
@@ -229,10 +237,9 @@ def build(cfg_path, out):
     if cfg.get('email'):  # link only, the address never shows as text
         socials.append({'id': 'email', 'url': 'mailto:' + cfg['email'], 'label': 'Email', 'alt': 'Send me an email'})
     section('social', 'Social media', socials, True)
-    if cfg.get('closing_art'):
-        rows = open(os.path.join(base, cfg['closing_art']), encoding='utf-8').read().rstrip('\n').split('\n')
-        pad = ' ' * max(1, (cfg.get('width', 79) + 2 - max(map(len, rows))) // 2)
-        parts.append('```text\n' + '\n'.join(pad + r for r in rows) + '\n```')
+    closing = closing_art_block(cfg, base)
+    if closing:
+        parts.append('```text\n' + closing + '\n```')
     foot = footer_block(cfg)
     if foot:
         parts.append('```text\n' + foot + '\n```')

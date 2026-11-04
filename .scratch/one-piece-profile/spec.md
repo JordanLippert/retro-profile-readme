@@ -36,6 +36,10 @@ Jordan Lippert's bilingual One Piece profile.
 17. As an art user, I want empty edges trimmed, so that the piece centers correctly.
 18. As Jordan, I want my profile config and art kept in this fork, so that I can rebuild the page later.
 19. As a maintainer, I want the generic features separate from personal data, so that they could go upstream.
+20. As a profile owner on a dark theme, I want every icon to keep its paper tile visible, so that no icon disappears into the page.
+21. As a visitor, I want the stack grouped by back end, front end and mobile, data and infra, so that I can scan it quickly.
+22. As a bilingual reader, I want the bio and project text in Portuguese and English, so that recruiters in both languages can read it.
+23. As Jordan, I want no phone number or internal employer metrics on the page, so that nothing private or company-owned goes public.
 
 ## Implementation Decisions
 
@@ -48,12 +52,16 @@ Jordan Lippert's bilingual One Piece profile.
 - Icons are 14x14 at most, in the existing glyph format. Sources are Simple Icons (CC0) and Devicon
   (MIT), reduced to pixels, with hand-drawn glyphs where the reduction is illegible. Logos stay trademarks of their owners.
 - The art editor is a separate script that works on the braille dot grid: trim, cut rows, invert, outline from a row.
+- A glyph covers at most 55% of the tile. A glyph that fills the tile hides the paper card and vanishes on the dark theme, so filled logos are reduced to about 11x11.
+- Jordan's page uses the small Luffy unedited beside the name, in the `standard` font. Outlining it weakened the hat and face, so it was rejected.
+- Jordan's closing art is Sanji with a shortened torso and an outlined body, which keeps the face intact and suits the "rebaixado" joke. The original stays next to it, so the edit can be rerun.
 - Personal data lives in its own profile folder. Gallery art goes in the existing anime examples only if it is not personal.
 
 ## Testing Decisions
 
 - One seam: run the build CLI with a config and assert on the README and SVGs. The art editor is tested the same way, through its CLI.
 - Tests cover external output only, using the standard library test runner, so no new dependency.
+- Icon data is checked as a whole: every glyph must be rectangular, fit the tile and leave paper visible.
 - No prior tests exist in this repo. The preview script stays a manual check.
 
 ## Out of Scope

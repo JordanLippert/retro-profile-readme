@@ -125,6 +125,9 @@ class ArtEditor(Case):
     def test_invert_flips_every_dot(self):
         self.assertEqual(self.edit(['⠁⣾'], '--invert'), ['⣾⠁'])
 
+    def test_invert_leaves_short_rows_padded_with_blanks(self):
+        self.assertEqual(self.edit(['⣾' * 3, '⣾' * 2], '--invert'), ['⠁' * 3, '⠁' * 2 + BLANK])
+
     def test_outline_hollows_below_the_row_only(self):
         rows = [FULL * 6] * 6
         out = self.edit(rows, '--outline-from', 2)

@@ -51,8 +51,8 @@ Ask in this order. Defaults in brackets.
 4. **Bio** for the `~/about.txt` window: 2 to 4 short lines, plus an optional second
    paragraph and a signature like `-@handle`. Offer to draft it from what they tell you and
    show the draft. Lines must be at most 75 characters. [signature `-@<username>`]
-5. **Stack.** Languages and tools to show, in order. Bundled icons: C, Clojure, Python,
-   Swift, TypeScript, React, GitHub. Anything else gets a 2-letter pixel tile, or you can
+5. **Stack.** Languages and tools to show, in order. Common languages and tools have
+   bundled icons (full list in [references/config.md](references/config.md)). Anything else gets a 2-letter pixel tile, or you can
    draw a glyph (see [references/config.md](references/config.md)). [their top repo languages]
 6. **Social links.** Which networks and the handle or URL for each. Bundled icons: website,
    Instagram, TikTok, YouTube, X, LinkedIn, GitHub, email. For email, say it only becomes a
@@ -66,7 +66,8 @@ Ask in this order. Defaults in brackets.
 
 Write `profile.json` yourself, following [examples/profile.json](examples/profile.json)
 (every key is in [references/config.md](references/config.md)). Paths inside it are
-relative to the config. Then:
+relative to the config. Optional keys: `projects`, `closing_art` and `stack` as a list of rows.
+`scripts/art.py` shortens, inverts or outlines art that is too tall or too heavy. Then:
 
 ```bash
 pip install pyfiglet
