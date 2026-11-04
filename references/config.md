@@ -48,7 +48,8 @@ Stack ids: `csharp`, `dotnet`, `javascript`, `java`, `nodejs`, `nestjs`, `fastap
 belong to their owners.
 
 `scripts/icons24.json` holds the 24x24 set used by `theme_aware`, with one color per theme. It comes from
-Pixelarticons (MIT, github.com/halfmage/pixelarticons), Simple Icons (CC0) and Devicon (MIT).
+Pixelarticons (MIT, github.com/halfmage/pixelarticons), Simple Icons (CC0) and Devicon (MIT), with a few
+drawn by hand where the reduced logo was unreadable.
 
 Any other id gets the first two letters of `label` (or of `short`, if set) in the pixel font.
 To draw your own, add a `glyph` to the item: a list of equal-length strings, at most 14×14, where
