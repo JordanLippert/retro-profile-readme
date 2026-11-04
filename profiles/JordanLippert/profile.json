@@ -163,10 +163,6 @@
       {
         "id": "bitbucket",
         "label": "Bitbucket"
-      },
-      {
-        "id": "stripe",
-        "label": "Stripe"
       }
     ]
   ],

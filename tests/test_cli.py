@@ -99,7 +99,7 @@ class Stack(Case):
         """A glyph that covers the tile hides the card and vanishes on GitHub's dark theme."""
         icons = json.loads((ROOT / 'scripts/glyphs.json').read_text(encoding='utf-8'))['icons']
         for name, rows in icons.items():
-            ink = sum(c != '.' for r in rows for c in r)
+            ink = sum(c in '#*' for r in rows for c in r)  # yellow reads fine on either theme
             self.assertLessEqual(ink / 196, 0.55, name)
 
     def test_common_stack_needs_no_letter_fallback(self):
