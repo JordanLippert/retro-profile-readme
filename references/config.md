@@ -18,6 +18,8 @@ JSON file. Paths inside it are relative to the config file. Only `name` is requi
 | `stack` | `[]` | Items `{ "id", "label" }`. Shown without links. A list of lists makes one row of icons per inner list. |
 | `projects` | `[]` | Items `{ "name", "url", "stack", "lines" }`, shown between stack and social. `lines` is a list, one line each. Leave out to skip the section. |
 | `closing_art` | none | Text file with art shown centered right before the footer. |
+| `art_as_image` | `false` | Draws `side_art` and `closing_art` as SVG images on a paper card, so the line height of code blocks cannot pull the dots apart. The name uses the pixel font; the bio stays text. |
+| `header_alt` / `closing_art_alt` | name / `Closing art` | Alt text for those images. |
 | `socials` | `[]` | Items `{ "id", "label", "url" }`, optional `alt` and `title`. |
 | `email` | none | Adds an envelope icon linking to `mailto:`. Never shown as text. |
 | `palette` | see below | Any subset of the colors below. |

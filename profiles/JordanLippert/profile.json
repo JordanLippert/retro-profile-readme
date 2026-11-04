@@ -209,8 +209,9 @@
       "[Process completed]"
     ]
   },
-  "figlet_font": "standard",
   "side_art": "art/luffy.txt",
-  "side_art_layout": "side",
-  "closing_art": "art/sanji.txt"
+  "closing_art": "art/sanji.txt",
+  "art_as_image": true,
+  "header_alt": "Jordan, with Luffy from One Piece",
+  "closing_art_alt": "Sanji from One Piece in a dark suit, smoking"
 }

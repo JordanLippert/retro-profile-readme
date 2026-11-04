@@ -53,8 +53,8 @@ Jordan Lippert's bilingual One Piece profile.
   (MIT), reduced to pixels, with hand-drawn glyphs where the reduction is illegible. Logos stay trademarks of their owners.
 - The art editor is a separate script that works on the braille dot grid: trim, cut rows, invert, outline from a row.
 - A glyph covers at most 55% of the tile. A glyph that fills the tile hides the paper card and vanishes on the dark theme, so filled logos are reduced to about 11x11.
-- Jordan's page uses the small Luffy unedited beside the name, in the `standard` font. Outlining it weakened the hat and face, so it was rejected.
-- Jordan's closing art is Sanji with a shortened torso and an outlined body, which keeps the face intact and suits the "rebaixado" joke. The original stays next to it, so the edit can be rerun.
+- Jordan's page uses the small Luffy and the full Sanji from the site, both unedited, as images. Editing the art was rejected: the problem was the rendering, not the drawings.
+- GitHub's code block line height pulls braille rows apart and destroys thin lines, so `art_as_image` draws the dots into SVGs on a paper card. The header becomes a banner with the name in the pixel font; the bio stays text.
 - Personal data lives in its own profile folder. Gallery art goes in the existing anime examples only if it is not personal.
 
 ## Testing Decisions

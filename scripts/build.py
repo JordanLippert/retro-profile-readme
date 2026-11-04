@@ -141,6 +141,11 @@ def header_block(cfg, base):
         print(f'  warning: name + side art is ~{col + max(map(len, art))} columns; '
               'it may scroll sideways on narrow screens', file=sys.stderr)
 
+    return '\n'.join(lines + ['', window_block(cfg)])
+
+
+def window_block(cfg):
+    W = cfg.get('width', 79)
     win = cfg.get('window', {})
     inner = W - 4
     def row(s=''):
@@ -155,15 +160,87 @@ def header_block(cfg, base):
     if win.get('signature'):
         box[-1:] = [row(win['signature']), row()]
     box.append(" '" + '-' * (W - 2) + "'")
-    return '\n'.join(lines + [''] + box)
+    return '\n'.join(box)
+
+
+def read_art(base, path):
+    return open(os.path.join(base, path), encoding='utf-8').read().rstrip('\n').split('\n')
 
 
 def closing_art_block(cfg, base):
     if not cfg.get('closing_art'):
         return ''
-    rows = open(os.path.join(base, cfg['closing_art']), encoding='utf-8').read().rstrip('\n').split('\n')
+    rows = read_art(base, cfg['closing_art'])
     pad = ' ' * max(1, (cfg.get('width', 79) + 2 - max(map(len, rows))) // 2)
     return '\n'.join(pad + r for r in rows)
+
+
+# ------------------------------------------------------------------ art images
+BRAILLE_DOTS = ((0, 0, 0x01), (0, 1, 0x02), (0, 2, 0x04), (1, 0, 0x08),
+                (1, 1, 0x10), (1, 2, 0x20), (0, 3, 0x40), (1, 3, 0x80))
+BORDER = 3
+
+
+def dots_path(rows, ox, oy, pitch):
+    """One path with a small square per braille dot."""
+    size = pitch - 1
+    d = []
+    for cy, row in enumerate(rows):
+        for cx, c in enumerate(row):
+            bits = ord(c) - 0x2800
+            for dx, dy, bit in BRAILLE_DOTS:
+                if 0 <= bits <= 0xFF and bits & bit:
+                    d.append(f'M{ox + (cx * 2 + dx) * pitch} {oy + (cy * 4 + dy) * pitch}h{size}v{size}h-{size}z')
+    return ''.join(d)
+
+
+def art_card(P, w, h, body, title):
+    """Paper card with the same ink outline and bevel as the icon tiles."""
+    t = BORDER
+    rects = [(t, 0, w-2*t, t, P['ink']), (t, h-t, w-2*t, t, P['ink']),
+             (0, t, t, h-2*t, P['ink']), (w-t, t, t, h-2*t, P['ink']),
+             (t, t, w-2*t, h-2*t, P['paper']),
+             (t, t, w-2*t, t, P['bevel_light']), (t, t, t, h-2*t, P['bevel_light']),
+             (t, h-2*t, w-2*t, t, P['bevel_dark']), (w-2*t, t, t, h-2*t, P['bevel_dark'])]
+    shapes = ''.join(f'<rect x="{x}" y="{y}" width="{rw}" height="{rh}" fill="{c}"/>' for x, y, rw, rh, c in rects)
+    return (f'<svg xmlns="http://www.w3.org/2000/svg" width="{w}" height="{h}" viewBox="0 0 {w} {h}" '
+            f'shape-rendering="crispEdges"><title>{html.escape(title)}</title>{shapes}{body}</svg>\n')
+
+
+def closing_svg(P, rows, title):
+    pitch, pad = 3, 24
+    w = len(rows[0]) * 2 * pitch + 2 * pad
+    h = len(rows) * 4 * pitch + 2 * pad
+    return art_card(P, w, h, f'<path fill="{P["ink"]}" d="{dots_path(rows, pad, pad, pitch)}"/>', title), w
+
+
+def banner_svg(P, name, rows, title):
+    """The name in the pixel font of the headings, with the art beside it."""
+    word = name.upper()
+    bad = sorted({c for c in word if c not in FONT})
+    if bad:
+        die(f'name "{word}" uses characters the pixel font lacks: {bad}')
+    scale, pitch, pad, gap = 10, 4, 32, 48
+    text_width, text_height = text_w(word) * scale, 7 * scale
+    art_w = len(rows[0]) * 2 * pitch if rows else 0
+    art_h = len(rows) * 4 * pitch if rows else 0
+    w = pad + text_width + (gap + art_w if rows else 0) + pad
+    h = max(art_h, text_height + scale * 4) + 2 * pad
+    x, y = pad, (h - text_height) // 2
+    band = (f'<rect x="{x - scale}" y="{y + 4 * scale}" width="{text_width + 2 * scale}" '
+            f'height="{4 * scale}" fill="{P["highlight"]}"/>')
+    letters = ''.join(f'<rect x="{x + px * scale}" y="{y + py * scale}" width="{scale}" height="{scale}" fill="{c}"/>'
+                      for px, py, _, _, c in text_px(word, 0, 0, P['ink']))
+    art = ''
+    if rows:
+        art = f'<path fill="{P["ink"]}" d="{dots_path(rows, w - pad - art_w, (h - art_h) // 2, pitch)}"/>'
+    return art_card(P, w, h, band + letters + art, title), w
+
+
+def image_tag(path, alt, width, center=False):
+    """No height attribute, so the image keeps its shape when a narrow screen scales it down."""
+    tag = f'<img src="./{path}" alt="{html.escape(alt)}" width="{width}">'
+    return f'<p align="center">{tag}</p>' if center else f'<p>{tag}</p>'
 
 
 def footer_block(cfg):
@@ -200,7 +277,16 @@ def build(cfg_path, out):
     os.makedirs(f'{out}/imgs/icons', exist_ok=True)
     os.makedirs(f'{out}/imgs/headings', exist_ok=True)
 
-    parts = ['```text\n' + header_block(cfg, base) + '\n```']
+    as_image = cfg.get('art_as_image', False)
+    if as_image:
+        os.makedirs(f'{out}/imgs/art', exist_ok=True)
+        alt = cfg.get('header_alt', cfg['name'])
+        rows = read_art(base, cfg['side_art']) if cfg.get('side_art') else []
+        banner, width = banner_svg(P, cfg['name'], rows, alt)
+        open(f'{out}/imgs/art/header.svg', 'w', encoding='utf-8').write(banner)
+        parts = [image_tag('imgs/art/header.svg', alt, width), '```text\n' + window_block(cfg) + '\n```']
+    else:
+        parts = ['```text\n' + header_block(cfg, base) + '\n```']
     sections = cfg.get('sections', {})
     num = 0
     def heading(key, default):
@@ -237,9 +323,13 @@ def build(cfg_path, out):
     if cfg.get('email'):  # link only, the address never shows as text
         socials.append({'id': 'email', 'url': 'mailto:' + cfg['email'], 'label': 'Email', 'alt': 'Send me an email'})
     section('social', 'Social media', socials, True)
-    closing = closing_art_block(cfg, base)
-    if closing:
-        parts.append('```text\n' + closing + '\n```')
+    if as_image and cfg.get('closing_art'):
+        alt = cfg.get('closing_art_alt', 'Closing art')
+        closing, width = closing_svg(P, read_art(base, cfg['closing_art']), alt)
+        open(f'{out}/imgs/art/closing.svg', 'w', encoding='utf-8').write(closing)
+        parts.append(image_tag('imgs/art/closing.svg', alt, width, center=True))
+    elif cfg.get('closing_art'):
+        parts.append('```text\n' + closing_art_block(cfg, base) + '\n```')
     foot = footer_block(cfg)
     if foot:
         parts.append('```text\n' + foot + '\n```')
